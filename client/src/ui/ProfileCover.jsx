@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useGetUser } from '../hooks/useGetUser';
+import { useParams } from 'react-router-dom';
 
 const StyledCoverPhoto = styled.div`
 	width: 100%;
@@ -26,15 +28,20 @@ const Description = styled.div`
 	text-align: center;
 `;
 
-const ProfileCover = ({ className }) => {
+const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
+
+const ProfileCover = () => {
+	const { username } = useParams();
+	const [user] = useGetUser(username);
+
 	return (
 		<div>
-			<StyledCoverPhoto src="/assets/post/2.jpeg">
-				<StyledPhoto src="/assets/person/7.jpeg" />
+			<StyledCoverPhoto src={`${PUBLIC_URL}${user.coverPhoto || '/person/noCover.png'}`}>
+				<StyledPhoto src={`${PUBLIC_URL}${user.profilePicture || '/person/noAvatar.png'}`} />
 			</StyledCoverPhoto>
 
 			<Description>
-				<h2>Safak Kogaulu</h2>
+				<h2>{user.username}</h2>
 				<p>Hello My friends</p>
 			</Description>
 		</div>

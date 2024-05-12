@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import { useRef, useEffect } from 'react';
+
+import { useAuth } from '../../context/AuthContext';
+import { AuthLoginApi } from '../../api/AuthApi';
+
+import ErrorMessage from '../ErrorMessage';
+import Spinner from '../Spinner';
 
 import Input from '../Input';
 
@@ -38,16 +45,44 @@ const StyledLink = styled(Link)`
 const LoginForm = () => {
 	const navigate = useNavigate();
 
+	const email = useRef(null);
+
+	const password = useRef(null);
+
+	const { dispatchAuth, isAuthenticated, isFetching, isError } = useAuth();
+
+	useEffect(() => {
+		if (!isFetching && isAuthenticated) {
+			alert('Login Successful');
+			navigate('/');
+		}
+	}, [isAuthenticated, isFetching, navigate]);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const loginUser = { email: email.current.value, password: password.current.value };
+		await AuthLoginApi(loginUser, dispatchAuth);
+	};
+
 	return (
 		<StyledWrapper>
 			<h2>Login to your account</h2>
 
-			<Form>
-				<Input type="email" placeholder="Enter Your Email" />
+			{!isFetching && isError && <ErrorMessage>{isError}</ErrorMessage>}
 
-				<Input type="password" placeholder="Enter Your Password" />
+			<Form onSubmit={handleSubmit}>
+				<Input type="email" disabled={isFetching} required ref={email} placeholder="Enter Your Email" />
 
-				<Button>Log In</Button>
+				<Input
+					type="password"
+					disabled={isFetching}
+					required
+					minLength="6"
+					ref={password}
+					placeholder="Enter Your Password"
+				/>
+
+				<Button disabled={isFetching}>{isFetching ? <Spinner /> : 'Login'}</Button>
 			</Form>
 
 			<StyledLink to="/forget-password">Forget Password?</StyledLink>

@@ -3,7 +3,7 @@ import { createContext, useReducer } from 'react';
 export const AuthContext = createContext();
 
 const INITIAL_STATE = {
-	user: [],
+	user: {},
 	isFetching: false,
 	isError: false,
 	isAuthenticated: false
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
 		case 'LOGIN_ERROR':
 			return { ...state, isFetching: false, isError: action.payload };
 		case 'LOGIN_SUCCESS':
-			return { ...state, user: action.payload, isFetching: false };
+			return { isError: false, user: action.payload, isFetching: false, isAuthenticated: true };
 		default:
 			return state;
 	}

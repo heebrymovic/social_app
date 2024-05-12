@@ -1,5 +1,8 @@
+import axios from 'axios';
 import styled from 'styled-components';
 import { useState } from 'react';
+
+import { useAuth } from '../../../context/AuthContext';
 
 const Icon = styled.img`
 	width: 25px;
@@ -29,13 +32,24 @@ const IconText = styled(Display)`
 	font-size: 0.95rem;
 `;
 
-const PostBottom = ({ data: { like, comment } }) => {
-	const [isLiked, setIsLiked] = useState(false);
-	const [totalLikes, setTotalLike] = useState(like);
+const PostBottom = ({ data: { likes, comment, _id: id } }) => {
+	const {
+		user: { _id: userId }
+	} = useAuth();
 
-	const handleLikes = () => {
-		setIsLiked((like) => !like);
-		setTotalLike((likes) => (isLiked ? likes - 1 : likes + 1));
+	const [totalLikes, setTotalLike] = useState(likes.length);
+
+	const [isLiked, setIsLiked] = useState(likes.includes(userId));
+
+	const handleLikes = async () => {
+		try {
+			await axios.put(`/api/posts/like/${id}`, { userId });
+
+			setIsLiked((like) => !like);
+			setTotalLike((likes) => (isLiked ? likes - 1 : likes + 1));
+		} catch (err) {
+			console.log(err.message);
+		}
 	};
 
 	return (

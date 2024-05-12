@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/User');
 
+const mongoose = require('mongoose');
+
 /*
 	update user
 	delete user
@@ -96,13 +98,15 @@ UserRouter.delete('/delete/:id', async (req, res) => {
 
 /*GET User*/
 UserRouter.get('/getuser/:id', async (req, res) => {
-	const id = req.params.id;
+	const userId = req.params.id;
 
 	try {
-		const user = await User.findOne({ _id: id });
+		const isValidObjectId = mongoose.isObjectIdOrHexString(userId);
+
+		const user = await User.findOne(isValidObjectId ? { _id: userId } : { username: userId });
 
 		if (!user) {
-			res.status(404).json({
+			return res.status(404).json({
 				message: 'Cannot get User data',
 				error: 'Invalid User Id'
 			});

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import PostTop from './PostTop';
 import PostBottom from './PostBottom';
+import { useGetUser } from '../../../hooks/useGetUser';
 
 const StyledPost = styled.div`
 	padding: 10px;
@@ -24,14 +25,17 @@ const UserPostImg = styled.img`
 `;
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
+
 const Post = ({ post }) => {
-	const { desc, photo, ...rest } = post;
+	const { description, image, createdAt, ...rest } = post;
+
+	const [user] = useGetUser(post.userId);
 
 	return (
 		<StyledPost>
-			<PostTop post={rest} />
-			<UserPost>{desc}</UserPost>
-			<UserPostImg src={`${PUBLIC_URL}${photo}`} />
+			<PostTop user={user} createdAt={createdAt} />
+			<UserPost>{description}</UserPost>
+			{image && <UserPostImg src={`${PUBLIC_URL}${image}`} />}
 			<PostBottom data={rest} />
 		</StyledPost>
 	);

@@ -48,9 +48,13 @@ const UserSchema = new Mongoose.Schema(
 			type: String,
 			default: ''
 		},
-		location: {
+		from: {
 			type: String,
 			default: ''
+		},
+		relationship: {
+			type: String,
+			enum: ['single', 'married', 'divorced']
 		}
 	},
 	{ timestamps: true }

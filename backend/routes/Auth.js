@@ -10,6 +10,19 @@ AuthRouter.post('/register', async (req, res) => {
 	const { username, email, password } = req.body;
 
 	try {
+		const checkUser = await User.findOne({ $or: [{ username }, { email }] });
+
+		if (checkUser) {
+			console.log(checkUser);
+
+			const error = username === checkUser.username ? 'Username already Exist' : 'Email already exist';
+
+			return res.status(400).json({
+				message: 'Failed to create user',
+				error
+			});
+		}
+
 		const salt = await bcrypt.genSalt(10);
 
 		const hashedPassword = await bcrypt.hash(password, salt);
@@ -34,7 +47,7 @@ AuthRouter.post('/login', async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!email || !password) {
-		res.status(400).json({
+		return res.status(400).json({
 			message: 'An error occured',
 			error: 'Both email and password are required'
 		});

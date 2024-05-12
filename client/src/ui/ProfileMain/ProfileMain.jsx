@@ -1,4 +1,7 @@
 import styled, { css } from 'styled-components';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Feeds from '../Feeds';
 import ProfileRightbar from './ProfileRightbar';
@@ -17,9 +20,27 @@ const extrasStyles = css`
 `;
 
 const ProfileMain = () => {
+	const [userPost, setUserPost] = useState([]);
+
+	const { username } = useParams();
+
+	useEffect(() => {
+		const fetchAllPost = async () => {
+			try {
+				const res = await axios.get(`/api/posts/allposts/${username}`);
+
+				setUserPost(res.data.posts);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+
+		fetchAllPost();
+	}, [username]);
+
 	return (
 		<Main>
-			<Feeds extras={extrasStyles} />
+			<Feeds extras={extrasStyles} userPosts={userPost} />
 			<ProfileRightbar />
 		</Main>
 	);

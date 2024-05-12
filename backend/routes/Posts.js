@@ -180,4 +180,30 @@ PostRouter.get('/timeline/all/:userId', async (req, res) => {
 	}
 });
 
+/*GET ALL USERS POST*/
+
+PostRouter.get('/allposts/:username', async (req, res) => {
+	const username = req.params.username;
+
+	try {
+		const user = await User.findOne({ username });
+
+		const posts = await Post.find({ userId: user._id });
+
+		const sortedPost = posts.sort((postA, postB) => new Date(postB.createdAt) - new Date(postA.createdAt));
+
+		const message = posts.length === 0 ? 'No Post yet' : 'Post succesfully queried';
+
+		res.status(200).json({
+			message,
+			posts: sortedPost
+		});
+	} catch (err) {
+		res.status(400).json({
+			message: 'Failed to get all user posts',
+			error: err.message
+		});
+	}
+});
+
 module.exports = PostRouter;

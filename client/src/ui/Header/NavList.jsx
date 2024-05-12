@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const StyledList = styled.div`
 	display: flex;
@@ -11,10 +12,12 @@ const StyledList = styled.div`
 `;
 
 const NavList = () => {
+	const { user } = useAuth();
+
 	return (
 		<StyledList>
 			<Link to="/">Homepage</Link>
-			<Link to="/profile">Timeline</Link>
+			<Link to={`/profile/${user.username}`}>Timeline</Link>
 		</StyledList>
 	);
 };

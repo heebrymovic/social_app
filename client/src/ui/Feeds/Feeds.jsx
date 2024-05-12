@@ -19,11 +19,11 @@ const StyledFeeds = styled.div.withConfig({
 	${(props) => props.extras}
 `;
 
-const Feeds = ({ extras }) => {
+const Feeds = ({ extras, userPosts = [] }) => {
 	return (
 		<StyledFeeds extras={extras}>
 			<Share />
-			<Posts />
+			<Posts userPosts={userPosts} />
 		</StyledFeeds>
 	);
 };

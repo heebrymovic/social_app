@@ -1,7 +1,10 @@
+import { useRef, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Input from '../Input';
+import ErrorMessage from '../ErrorMessage';
 
 const StyledWrapper = styled.div`
 	background: var(--color-white);
@@ -36,18 +39,58 @@ const StyledLink = styled(Link)`
 `;
 
 const LoginForm = () => {
+	const username = useRef();
+	const email = useRef();
+	const password = useRef();
+	const confirmPassword = useRef();
+	const navigate = useNavigate();
+
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isError, setIsError] = useState(false);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const newUser = {
+			username: username.current.value,
+			email: email.current.value,
+			password: password.current.value
+		};
+
+		if (password.current.value !== confirmPassword.current.value) return setIsError("Password Doesn't Match");
+
+		try {
+			setIsSubmitting(true);
+
+			const res = await axios.post('/api/auth/register', newUser);
+
+			setIsSubmitting(false);
+			setIsError(false);
+			if (res.data.user) {
+				alert('Registration Successful. You can process to login');
+				navigate('/login');
+			}
+		} catch (err) {
+			setIsError(err.response.data.error || err.message);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
 	return (
 		<StyledWrapper>
 			<h2>Create an account</h2>
 
-			<Form>
-				<Input type="text" placeholder="Enter Your Fullname" />
+			{!isSubmitting && isError && <ErrorMessage>{isError}</ErrorMessage>}
 
-				<Input type="email" placeholder="Enter Your Email" />
+			<Form onSubmit={handleSubmit}>
+				<Input type="text" ref={username} required placeholder="Enter Your Username" />
 
-				<Input type="password" placeholder="Enter Your Password" />
+				<Input type="email" ref={email} required placeholder="Enter Your Email" />
 
-				<Input type="password" placeholder="Confirm Password" />
+				<Input type="password" minLength="6" ref={password} required placeholder="Enter Your Password" />
+
+				<Input type="password" minLength="6" ref={confirmPassword} required placeholder="Confirm Password" />
 
 				<Button>Register</Button>
 			</Form>

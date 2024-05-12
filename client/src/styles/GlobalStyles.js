@@ -9,6 +9,7 @@ export const GlobalStyles = createGlobalStyle`
 		--color-gray--1:#d1cccc;
 		--color-gray--2:#ebe3e3;
 		--color-green:#3dbd3d;
+		--color-error:#ff4040
 	}
 	
 	/*CSS RESETS*/

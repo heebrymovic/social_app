@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Users as UsersData } from '../../../data';
+import { format } from 'timeago.js';
 
 const UserTopWrapper = styled.div`
 	display: flex;
@@ -30,15 +31,17 @@ const Time = styled.span`
 	font-weight: 400;
 `;
 
-const PostTop = ({ post }) => {
-	const { profilePicture, username } = UsersData.find((user) => user.id === post.userId);
+const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
+const PostTop = ({ user: { profilePicture, username }, createdAt }) => {
 	return (
 		<UserTopWrapper>
 			<UserTopLeft>
-				<StyledImg src={`assets/${profilePicture}`} />
+				<Link to={`/profile/${username}`}>
+					<StyledImg src={`${PUBLIC_URL}${profilePicture || '/person/noAvatar.png'}`} />
+				</Link>
 				<Title>{username}</Title>
-				<Time>{post.date}</Time>
+				<Time>{format(createdAt)}</Time>
 			</UserTopLeft>
 			<MoreVertIcon />
 		</UserTopWrapper>
