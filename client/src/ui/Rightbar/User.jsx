@@ -28,13 +28,15 @@ const ActiveWrapper = styled.div`
 	position: relative;
 `;
 
+const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
+
 const User = ({ user }) => {
 	const { profilePicture, username } = user;
 
 	return (
 		<UserWrapper>
 			<ActiveWrapper>
-				<Img src={`/assets/${profilePicture}`} />
+				<Img src={`${PUBLIC_URL}${profilePicture}`} />
 				<Active />
 			</ActiveWrapper>
 			<h4>{username}</h4>

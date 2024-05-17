@@ -6,8 +6,27 @@ const Post = require('../models/Post');
 
 const User = require('../models/User');
 
+const multer = require('multer');
+
+const fs = require('fs');
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, './public/uploads/post');
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + file.originalname);
+	}
+});
+
+const upload = multer({ storage });
+
 /*CREATE A POST*/
-PostRouter.post('/create', async (req, res) => {
+PostRouter.post('/create', upload.single('file'), async (req, res) => {
+	if (req.file && req.file.filename) {
+		req.body.image = 'post/' + req.file.filename;
+	}
+
 	const newPost = await new Post(req.body);
 
 	try {
@@ -18,6 +37,8 @@ PostRouter.post('/create', async (req, res) => {
 			post: savedPost
 		});
 	} catch (err) {
+		req.file && fs.unlinkSync(req.file.path);
+
 		res.status(400).json({
 			message: 'Unable to save post',
 			error: err.message
@@ -105,16 +126,19 @@ PostRouter.put('/like/:postId', async (req, res) => {
 		if (post.likes.includes(userId)) {
 			await post.updateOne({ $pull: { likes: userId } });
 
+			const newPost = await Post.findById(postId);
+
 			res.status(200).json({
 				message: 'Post succesfully unliked',
-				post
+				post: newPost
 			});
 		} else {
 			await post.updateOne({ $push: { likes: userId } });
 
+			const newPost = await Post.findById(postId);
 			res.status(200).json({
 				message: 'Post succesfully liked',
-				post
+				post: newPost
 			});
 		}
 	} catch (err) {

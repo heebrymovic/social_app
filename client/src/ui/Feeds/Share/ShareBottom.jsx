@@ -27,6 +27,7 @@ const ShareIconWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 5px;
+	cursor: pointer;
 `;
 
 const StyledButton = styled.button`
@@ -37,15 +38,26 @@ const StyledButton = styled.button`
 	border-radius: 4px;
 	font-size: 0.95rem;
 `;
+const StyledFile = styled.input`
+	display: none;
+`;
 
-const ShareBottom = () => {
+const ShareBottom = ({ setUploadFile, isSubmitting }) => {
 	return (
 		<StyledWrapper>
 			<StyledShareList>
-				<ShareIconWrapper>
-					<PhotoLibraryIcon color="secondary" />
-					<span>Photo or Video</span>
-				</ShareIconWrapper>
+				<label htmlFor="upload">
+					<ShareIconWrapper>
+						<PhotoLibraryIcon color="secondary" />
+						<span>Photo or Video</span>
+						<StyledFile
+							type="file"
+							id="upload"
+							onChange={(e) => setUploadFile(e.target.files[0])}
+							accept=".png, .jpg, .jpeg"
+						/>
+					</ShareIconWrapper>
+				</label>
 
 				<ShareIconWrapper>
 					<LabelIcon color="error" />
@@ -63,7 +75,7 @@ const ShareBottom = () => {
 				</ShareIconWrapper>
 			</StyledShareList>
 
-			<StyledButton>Share</StyledButton>
+			<StyledButton disabled={isSubmitting}>Share</StyledButton>
 		</StyledWrapper>
 	);
 };

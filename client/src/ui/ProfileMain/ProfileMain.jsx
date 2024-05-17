@@ -40,7 +40,7 @@ const ProfileMain = () => {
 
 	return (
 		<Main>
-			<Feeds extras={extrasStyles} userPosts={userPost} />
+			<Feeds extras={extrasStyles} userPosts={userPost} username={username} />
 			<ProfileRightbar />
 		</Main>
 	);

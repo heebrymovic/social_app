@@ -36,7 +36,7 @@ const ProfileCover = () => {
 
 	return (
 		<div>
-			<StyledCoverPhoto src={`${PUBLIC_URL}${user.coverPhoto || '/person/noCover.png'}`}>
+			<StyledCoverPhoto src={`${PUBLIC_URL}${user.coverPicture || '/person/noCover.png'}`}>
 				<StyledPhoto src={`${PUBLIC_URL}${user.profilePicture || '/person/noAvatar.png'}`} />
 			</StyledCoverPhoto>
 

@@ -31,17 +31,19 @@ const Ads = styled.img`
 	border-radius: 10px;
 `;
 
+const CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
+
 const Rightbar = ({ className }) => {
 	return (
 		<Wrapper>
 			<Notification>
-				<Img src="/assets/gift.png" />
+				<Img src={`${CLIENT_URL}gift.png`} />
 				<StyledText>
 					<b>Pola Foster</b> and <b>3 other friends</b> have a birthday today
 				</StyledText>
 			</Notification>
 
-			<Ads src="/assets/ad.png" />
+			<Ads src={`${CLIENT_URL}ad.png`} />
 
 			<ActiveUsers />
 		</Wrapper>

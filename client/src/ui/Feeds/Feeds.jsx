@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { useAuth } from '../../context/AuthContext';
 import Posts from './Posts';
 import Share from './Share';
 
@@ -19,10 +20,12 @@ const StyledFeeds = styled.div.withConfig({
 	${(props) => props.extras}
 `;
 
-const Feeds = ({ extras, userPosts = [] }) => {
+const Feeds = ({ extras, userPosts = [], username }) => {
+	const { user } = useAuth();
+
 	return (
 		<StyledFeeds extras={extras}>
-			<Share />
+			{(user.username === username || !username) && <Share />}
 			<Posts userPosts={userPosts} />
 		</StyledFeeds>
 	);

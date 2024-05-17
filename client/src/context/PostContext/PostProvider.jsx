@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { createContext, useReducer, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
 export const PostContext = createContext();
@@ -45,7 +44,11 @@ const PostProvider = ({ children }) => {
 		user._id && fetchPost();
 	}, [user._id]);
 
-	return <PostContext.Provider value={{ posts, isLoadingPost, isPostError }}>{children}</PostContext.Provider>;
+	return (
+		<PostContext.Provider value={{ posts, isLoadingPost, isPostError, postDispatch: dispatch }}>
+			{children}
+		</PostContext.Provider>
+	);
 };
 
 export default PostProvider;

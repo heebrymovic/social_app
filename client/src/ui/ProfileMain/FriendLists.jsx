@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { useAuth } from '../../context/AuthContext';
 import Friend from './Friend';
 
 const StyledFriendLists = styled.ul`
@@ -14,18 +15,21 @@ const Wrapper = styled.div`
 `;
 
 const FriendLists = () => {
+	const { user } = useAuth();
+
 	return (
 		<Wrapper>
 			<h3>User Friends</h3>
 
-			<StyledFriendLists>
-				<Friend />
-				<Friend />
-				<Friend />
-				<Friend />
-				<Friend />
-				<Friend />
-			</StyledFriendLists>
+			{user.followings.length == 0 ? (
+				<p>You are not following any body yet</p>
+			) : (
+				<StyledFriendLists>
+					{user.followings.map((friendId) => (
+						<Friend key={friendId} friendId={friendId} />
+					))}
+				</StyledFriendLists>
+			)}
 		</Wrapper>
 	);
 };

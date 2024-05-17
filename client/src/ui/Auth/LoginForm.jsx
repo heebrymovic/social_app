@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 import { useAuth } from '../../context/AuthContext';
 import { AuthLoginApi } from '../../api/AuthApi';
@@ -53,7 +54,7 @@ const LoginForm = () => {
 
 	useEffect(() => {
 		if (!isFetching && isAuthenticated) {
-			alert('Login Successful');
+			toast.success('Login Successful');
 			navigate('/');
 		}
 	}, [isAuthenticated, isFetching, navigate]);
