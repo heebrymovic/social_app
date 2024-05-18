@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useAuth } from '../../../context/AuthContext';
 import { usePost } from '../../../context/PostContext';
@@ -20,8 +21,21 @@ const StyledShare = styled.div`
 `;
 
 const StyledPreview = styled.img`
-	height: 300px;
+	max-height: 300px;
 	object-fit: contain;
+	width: 100%;
+`;
+
+const StyledCancel = styled(CancelIcon)`
+	top: 0%;
+	position: absolute;
+	right: 0%;
+	cursor: pointer;
+`;
+
+const UploadWrapper = styled.div`
+	position: relative;
+	align-self: center;
 `;
 
 const Share = () => {
@@ -31,13 +45,17 @@ const Share = () => {
 	const [uploadFile, setUploadFile] = useState(null);
 	const [isPosting, setIsPosting] = useState(false);
 
-	const previewImage = useRef();
+	const formRef = useRef();
 
-	/*postDispatch({ type: 'POST_SUCCESS', payload: [] });*/
+	const cancelUpload = () => {
+		const oldInput = postDesc.current.value;
 
-	useEffect(() => {
-		if (uploadFile) previewImage.current.src = URL.createObjectURL(uploadFile);
-	}, [uploadFile]);
+		formRef.current.reset();
+
+		setUploadFile(null);
+
+		postDesc.current.value = oldInput;
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -66,17 +84,9 @@ const Share = () => {
 
 			postDispatch({ type: 'POST_SUCCESS', payload: [res.data.post, ...posts] });
 
-			console.log(res.data, posts);
-
-			postDesc.current.value = '';
-
-			if (previewImage) {
-				previewImage.current.src = '';
-			}
-
+			formRef.current.reset();
 			setUploadFile(null);
 		} catch (err) {
-			console.log(err);
 			toast.error(err.response.data.error || err.message);
 		} finally {
 			setIsPosting(false);
@@ -84,11 +94,16 @@ const Share = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form ref={formRef} onSubmit={handleSubmit}>
 			<StyledShare>
 				<ShareTop postDesc={postDesc} />
 				<Divider />
-				{uploadFile && <StyledPreview ref={previewImage} />}
+				{uploadFile && (
+					<UploadWrapper>
+						<StyledPreview src={URL.createObjectURL(uploadFile)} />
+						<StyledCancel onClick={cancelUpload} />
+					</UploadWrapper>
+				)}
 				<ShareBottom isSubmitting={isPosting} setUploadFile={setUploadFile} />
 			</StyledShare>
 		</form>

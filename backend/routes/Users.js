@@ -133,14 +133,14 @@ UserRouter.put('/follow/:id', async (req, res) => {
 	const userId = req.params.id;
 
 	if (!userId || !followerId) {
-		res.status(400).send({
+		return res.status(400).send({
 			message: 'Failed to follow users',
 			error: 'Both follower user id and following user id are required'
 		});
 	}
 
 	if (userId === followerId) {
-		res.status(403).json({
+		return res.status(403).json({
 			message: 'Failed to follow users',
 			error: 'You cannot follow yourself'
 		});
@@ -181,14 +181,14 @@ UserRouter.put('/unfollow/:id', async (req, res) => {
 	const followingId = req.params.id;
 
 	if (!followingId || !followerId) {
-		res.status(400).send({
+		return res.status(400).send({
 			message: 'Failed to unfollow user',
 			error: 'Both follower user id and following user id are required'
 		});
 	}
 
 	if (followingId === followerId) {
-		res.status(403).json({
+		return res.status(403).json({
 			message: 'Failed to unfollow users',
 			error: 'You cannot unfollow yourself'
 		});

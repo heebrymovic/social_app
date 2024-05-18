@@ -17,6 +17,26 @@ const reducer = (state, action) => {
 			return { ...state, isFetching: false, isError: action.payload };
 		case 'LOGIN_SUCCESS':
 			return { isError: false, user: action.payload, isFetching: false, isAuthenticated: true };
+		case 'FOLLOW':
+			return {
+				isError: false,
+				user: {
+					...state.user,
+					followings: [...state.user.followings, action.payload]
+				},
+				isFetching: false,
+				isAuthenticated: true
+			};
+		case 'UNFOLLOW':
+			return {
+				isError: false,
+				user: {
+					...state.user,
+					followings: state.user.followings.filter((followingId) => followingId !== action.payload)
+				},
+				isFetching: false,
+				isAuthenticated: true
+			};
 		default:
 			return state;
 	}

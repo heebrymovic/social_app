@@ -42,7 +42,7 @@ const ProfileCover = () => {
 
 			<Description>
 				<h2>{user.username}</h2>
-				<p>Hello My friends</p>
+				<p>{user.desc}</p>
 			</Description>
 		</div>
 	);
