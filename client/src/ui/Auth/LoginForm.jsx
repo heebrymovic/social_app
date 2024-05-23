@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useAuth } from '../../context/AuthContext';
 import { AuthLoginApi } from '../../api/AuthApi';
+import { useRefreshToken } from '../../hooks/useRefreshToken';
 
 import ErrorMessage from '../ErrorMessage';
 import Spinner from '../Spinner';
@@ -50,19 +51,30 @@ const LoginForm = () => {
 
 	const password = useRef(null);
 
-	const { dispatchAuth, isAuthenticated, isFetching, isError } = useAuth();
+	const [authenticate, setAuthenticate] = useState(() => localStorage.getItem('authenticate') === 'true');
+
+	const { dispatchAuth, isFetching, isError } = useAuth();
+
+	const refresh = useRefreshToken();
 
 	useEffect(() => {
-		if (!isFetching && isAuthenticated) {
-			toast.success('Login Successful');
-			navigate('/');
-		}
-	}, [isAuthenticated, isFetching, navigate]);
+		const verify = async () => {
+			try {
+				await refresh();
+				toast.success('You have successfully logged in.');
+				navigate('/');
+			} catch (err) {
+				console.log(err);
+			}
+		};
+
+		authenticate && verify();
+	}, [navigate, authenticate, refresh]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const loginUser = { email: email.current.value, password: password.current.value };
-		await AuthLoginApi(loginUser, dispatchAuth);
+		await AuthLoginApi(loginUser, dispatchAuth, setAuthenticate);
 	};
 
 	return (

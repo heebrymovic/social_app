@@ -1,4 +1,5 @@
-import axios from 'axios';
+/*import axios from 'axios';*/
+import { usePrivateAxios } from '../../hooks/usePrivateAxios';
 import { createContext, useReducer, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 
@@ -26,6 +27,7 @@ const reducer = (state, action) => {
 const PostProvider = ({ children }) => {
 	const [postData, dispatch] = useReducer(reducer, INITIAL_POST);
 	const { user } = useAuth();
+	const axios = usePrivateAxios();
 
 	const { isLoading: isLoadingPost, isError: isPostError, posts } = postData;
 
@@ -33,16 +35,18 @@ const PostProvider = ({ children }) => {
 		const fetchPost = async () => {
 			try {
 				dispatch({ type: 'POST_FETCHING' });
+
 				const res = await axios.get(`api/posts/timeline/all/${user._id}`);
 
 				dispatch({ type: 'POST_SUCCESS', payload: res.data.posts });
 			} catch (err) {
+
 				dispatch({ type: 'POST_ERROR', isError: err.response.data.message || err.message });
 			}
 		};
 
-		user._id && fetchPost();
-	}, [user._id]);
+		fetchPost();
+	}, [user]);
 
 	return (
 		<PostContext.Provider value={{ posts, isLoadingPost, isPostError, postDispatch: dispatch }}>

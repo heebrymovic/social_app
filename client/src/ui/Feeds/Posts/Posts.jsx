@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import Post from './Post';
+import {memo} from "react"
 
+import Post from './Post';
 import { usePost } from '../../../context/PostContext';
 import Spinner from '../../Spinner';
 
@@ -9,16 +10,16 @@ const StyledMessage = styled.div`
 	font-weight: 600;
 `;
 
-const Posts = ({ userPosts }) => {
-	const { posts, isLoading } = usePost();
+const Posts = ({ generalPosts }) => {
+	const { posts, isLoadingPost } = usePost();
 
-	const feedPosts = userPosts.length > 0 ? userPosts : posts;
+	const feedPosts = generalPosts.length > 0 ? generalPosts : posts;
 
-	if (isLoading) return <Spinner />;
+	if (isLoadingPost || !feedPosts ) return <Spinner />;
 
 	return (
 		<>
-			{!isLoading && feedPosts.length === 0 ? (
+			{!isLoadingPost  && feedPosts.length === 0 ? (
 				<StyledMessage>You do not have any post yet.</StyledMessage>
 			) : (
 				feedPosts.map((post) => <Post post={post} key={post._id} />)
@@ -27,4 +28,4 @@ const Posts = ({ userPosts }) => {
 	);
 };
 
-export default Posts;
+export default memo(Posts);

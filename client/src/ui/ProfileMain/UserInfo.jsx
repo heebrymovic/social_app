@@ -36,7 +36,7 @@ const UserInfo = () => {
 
 	useEffect(() => {
 		!isLoading && setIsFollowing(mainUser.followings.includes(user._id));
-	}, [isLoading]);
+	}, [isLoading, mainUser, user ]);
 
 	const handleFollowAction = async () => {
 		try {

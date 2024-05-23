@@ -1,8 +1,12 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import SidebarLists from './SidebarLists';
 import FriendLists from './FriendLists';
 import Divider from '../Divider';
+import { useAuth } from '../../context/AuthContext';
 
 const StyledSidebar = styled.div`
 	height: calc(100vh - 65px);
@@ -27,12 +31,27 @@ const StyledButton = styled.button`
 	align-self: flex-start;
 `;
 
-const Sidebar = ({ className }) => {
+const Sidebar = () => {
+	const navigate = useNavigate();
+
+	const { dispatchAuth } = useAuth();
+
+	const logout = async () => {
+		await axios.post('/api/auth/logout');
+
+		toast.success('You have successfully logged out.');
+
+		localStorage.removeItem("authenticate")
+
+		dispatchAuth({ type: 'LOGOUT' });
+		navigate('/login', { replace: true });
+	};
+
 	return (
 		<StyledSidebar>
 			<SidebarLists />
 
-			<StyledButton>Show More</StyledButton>
+			<StyledButton onClick={logout}>Logout</StyledButton>
 
 			<Divider />
 

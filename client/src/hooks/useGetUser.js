@@ -1,12 +1,16 @@
-import axios from 'axios';
+import {usePrivateAxios} from "./usePrivateAxios"
 import { useState, useEffect } from 'react';
 
 export const useGetUser = (userId) => {
-	const [user, setUser] = useState({});
+	const axios = usePrivateAxios()
 
+	const [user, setUser] = useState({});
 	const [isLoading, setIsloading] = useState(false);
 
+	const [error, setError] = useState(false);
+
 	useEffect(() => {
+
 		const fetchUser = async () => {
 			try {
 				setIsloading(true);
@@ -15,7 +19,7 @@ export const useGetUser = (userId) => {
 
 				setUser(res.data.user);
 			} catch (err) {
-				console.log(err);
+				setError(err?.response?.data?.message || err.message);
 			} finally {
 				setIsloading(false);
 			}
@@ -24,5 +28,5 @@ export const useGetUser = (userId) => {
 		fetchUser();
 	}, [userId]);
 
-	return [user, isLoading];
+	return [user, isLoading, error];
 };

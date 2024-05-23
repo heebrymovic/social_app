@@ -6,19 +6,32 @@ const INITIAL_STATE = {
 	user: {},
 	isFetching: false,
 	isError: false,
-	isAuthenticated: false
+	accessToken: ''
 };
 
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'LOGIN_FETCHING':
 			return { ...state, isFetching: true };
+
 		case 'LOGIN_ERROR':
 			return { ...state, isFetching: false, isError: action.payload };
+
 		case 'LOGIN_SUCCESS':
-			return { isError: false, user: action.payload, isFetching: false, isAuthenticated: true };
+			return {
+				isError: false,
+				user: action.payload,
+				accessToken: action.payload.token,
+				isFetching: false,
+				isAuthenticated: true
+			};
+
+		case 'LOGOUT':
+			return { ...state, user: {}, isAuthenticated: false };
+
 		case 'FOLLOW':
 			return {
+				...state,
 				isError: false,
 				user: {
 					...state.user,
@@ -27,8 +40,10 @@ const reducer = (state, action) => {
 				isFetching: false,
 				isAuthenticated: true
 			};
+
 		case 'UNFOLLOW':
 			return {
+				...state,
 				isError: false,
 				user: {
 					...state.user,
@@ -45,10 +60,10 @@ const reducer = (state, action) => {
 const AuthProvider = ({ children }) => {
 	const [auth, dispatchAuth] = useReducer(reducer, INITIAL_STATE);
 
-	const { user, isFetching, isError, isAuthenticated } = auth;
+	const { user, isFetching, isError, isAuthenticated, accessToken } = auth;
 
 	return (
-		<AuthContext.Provider value={{ dispatchAuth, user, isFetching, isError, isAuthenticated }}>
+		<AuthContext.Provider value={{ dispatchAuth, user, isFetching, isError, isAuthenticated, accessToken }}>
 			{children}
 		</AuthContext.Provider>
 	);

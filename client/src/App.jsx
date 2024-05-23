@@ -13,7 +13,6 @@ const App = () => {
   return (
     <>
       <AuthProvider>
-        <PostProvider>
           <GlobalStyles />
           <BrowserRouter>
             <Routes>
@@ -22,7 +21,9 @@ const App = () => {
               <Route
                 element={
                   <ProtectedRoutes>
+                    <PostProvider>
                     <AppLayout />
+                    </PostProvider>
                   </ProtectedRoutes>
                 }
               >
@@ -54,7 +55,6 @@ const App = () => {
               }
             }}
           />
-        </PostProvider>
       </AuthProvider>
     </>
   );

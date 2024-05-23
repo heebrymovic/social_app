@@ -26,7 +26,7 @@ const Feeds = ({ extras, userPosts = [], username }) => {
 	return (
 		<StyledFeeds extras={extras}>
 			{(user.username === username || !username) && <Share />}
-			<Posts userPosts={userPosts} />
+			<Posts generalPosts={userPosts} />
 		</StyledFeeds>
 	);
 };
