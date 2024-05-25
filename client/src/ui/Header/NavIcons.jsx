@@ -15,7 +15,7 @@ const NavIcons = () => {
 	return (
 		<StyledWrapper>
 			<NavIcon Icon={PersonIcon} number={1} />
-			<NavIcon Icon={ChatIcon} number={2} />
+			<NavIcon Icon={ChatIcon} number={2} to="chats" />
 			<NavIcon Icon={NotificationsIcon} number={10} />
 		</StyledWrapper>
 	);

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Img = styled.img`
 	width: 45px;
@@ -7,7 +8,7 @@ const Img = styled.img`
 	object-fit: cover;
 `;
 
-const UserWrapper = styled.div`
+const UserWrapper = styled(Link)`
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -30,11 +31,11 @@ const ActiveWrapper = styled.div`
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
-const User = ({ user }) => {
+const ActiveFriend = ({ user, to }) => {
 	const { profilePicture, username } = user;
 
 	return (
-		<UserWrapper>
+		<UserWrapper to={to}>
 			<ActiveWrapper>
 				<Img src={`${PUBLIC_URL}${profilePicture}`} />
 				<Active />
@@ -44,4 +45,4 @@ const User = ({ user }) => {
 	);
 };
 
-export default User;
+export default ActiveFriend;

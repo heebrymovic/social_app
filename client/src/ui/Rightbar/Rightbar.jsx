@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import ActiveUsers from './ActiveUsers';
+import ActiveFriends from './ActiveFriends';
 
 const Wrapper = styled.div`
 	padding: 20px 20px 20px 10px;
@@ -45,7 +45,7 @@ const Rightbar = ({ className }) => {
 
 			<Ads src={`${CLIENT_URL}ad.png`} />
 
-			<ActiveUsers />
+			<ActiveFriends />
 		</Wrapper>
 	);
 };

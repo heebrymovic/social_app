@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import User from './User';
+import ActiveFriend from '../ActiveFriend';
 import { Users as UsersData } from '../../data';
 
 const Wrapper = styled.div`
@@ -9,16 +9,16 @@ const Wrapper = styled.div`
 	gap: 10px;
 `;
 
-const ActiveUsers = () => {
+const ActiveFriends = () => {
 	return (
 		<Wrapper>
 			<h4>Online Friends</h4>
 
 			{UsersData.map((user) => (
-				<User user={user} key={user.id} />
+				<ActiveFriend user={user} key={user.id} />
 			))}
 		</Wrapper>
 	);
 };
 
-export default ActiveUsers;
+export default ActiveFriends;

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const StyledIconWrapper = styled.div`
+const StyledIconWrapper = styled(Link)`
 	position: relative;
 	cursor: pointer;
 	display: grid;
@@ -21,9 +22,9 @@ const StyledBadge = styled.span`
 	font-size: 0.7rem;
 `;
 
-const NavIcon = ({ Icon, number }) => {
+const NavIcon = ({ Icon, number, to = '' }) => {
 	return (
-		<StyledIconWrapper>
+		<StyledIconWrapper to={to}>
 			<Icon />
 			<StyledBadge>{number}</StyledBadge>
 		</StyledIconWrapper>
