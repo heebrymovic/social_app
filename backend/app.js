@@ -18,6 +18,10 @@ const AuthRoutes = require('./routes/Auth');
 
 const PostRoutes = require('./routes/Posts');
 
+const ConversationRoutes = require('./routes/Conversations');
+
+const MessagesRoutes = require('./routes/Messages');
+
 const { verifyJwt } = require('./middleware/verifyJwt');
 
 dotenv.config();
@@ -35,6 +39,10 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '/public/uploads')));
 
 app.use('/api/auth', AuthRoutes);
+
+app.use('/api/conversations', ConversationRoutes);
+
+app.use('/api/messages', MessagesRoutes);
 
 app.use('/api/users', verifyJwt, UserRoutes);
 
