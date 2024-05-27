@@ -1,13 +1,13 @@
-import ChatsMenu from './ChatsMenu';
+import { ChatsMenu } from './ChatsMenu';
 import { Conversations } from './Conversations';
 import ChatOnline from './ChatOnline';
 
-const Chats = ({ className }) => {
+const Chats = () => {
 	return (
 		<>
 			<ChatsMenu />
 			<Conversations />
-			<ChatOnline>Online Friends</ChatOnline>
+			<ChatOnline />
 		</>
 	);
 };

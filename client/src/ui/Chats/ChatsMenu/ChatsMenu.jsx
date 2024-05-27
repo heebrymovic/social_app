@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
-import Friend from '../Friend';
+import UserChatList from './UserChatList';
+import { useAuth } from '../../../context/AuthContext';
 
 const Wrapper = styled.div`
 	padding: 25px 15px;
@@ -41,14 +44,31 @@ const user = {
 };
 
 const ChatsMenu = () => {
+	const [conversations, setConversations] = useState([]);
+
+	const [chats, setChats] = useState([]);
+
+	const { user } = useAuth();
+
+	useEffect(() => {
+		const getConversations = async () => {
+			const res = await axios.get(`/api/conversations/${user._id}`);
+
+			setConversations(res.data.conversations);
+		};
+
+		getConversations();
+	}, [user]);
+
 	return (
 		<Wrapper>
 			<Search type="text" placeholder="Search for friends" />
 			<FriendsWrapper>
-				<Friend user={user} />
-				<Friend user={user} />
-				<Friend user={user} />
-				<Friend user={user} />
+				{conversations.length === 0 ? (
+					<p>No Chats Yet</p>
+				) : (
+					conversations.map((c) => <UserChatList conversation={c} key={c._id} />)
+				)}
 			</FriendsWrapper>
 		</Wrapper>
 	);

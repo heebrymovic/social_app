@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledBox = styled.div`
+const StyledBox = styled.form`
 	height: 20%;
 	display: flex;
 	gap: 10px;
@@ -30,11 +30,11 @@ const Button = styled.button`
 	border-radius: 5px;
 `;
 
-const ChatBottom = () => {
+const ChatBottom = ({ onSubmit, messageRef, formRef }) => {
 	return (
-		<StyledBox>
-			<TextArea placeholder="Enter a message"></TextArea>
-			<Button>Send</Button>
+		<StyledBox onSubmit={onSubmit}>
+			<TextArea ref={messageRef} placeholder="Enter a message"></TextArea>
+			<Button ref={formRef}>Send</Button>
 		</StyledBox>
 	);
 };

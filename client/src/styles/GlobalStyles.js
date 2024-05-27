@@ -18,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
 	::-webkit-scrollbar-track{background: var(--color-gray--0);}
 	::-webkit-scrollbar-thumb{background: var(--color-gray--1); border-radius:10px;}
 	*{box-sizing:border-box;color:currentColor;outline:none;resize:none;text-decoration:none; font-family: "Roboto", sans-serif;}
-	html{-webkit-tap-highlight-color:transparent}
+	html{-webkit-tap-highlight-color:transparent;smooth-behavior:scroll}
 	body{overflow-x:hidden;}
 	*,html, body {margin:0;padding:0; }
 	span{display:inline-block}

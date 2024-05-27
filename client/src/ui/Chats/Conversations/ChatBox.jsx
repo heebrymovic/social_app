@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { format } from 'timeago.js';
 
 const StyledChat = styled.div.withConfig({
 	shouldForwardProp: (prop, defaultValidatorFn) => !['own'].includes(prop)
@@ -25,41 +26,42 @@ const Img = styled.img`
 `;
 
 const ChatContainer = styled.div`
-	padding: 10px;
+	padding: 8px 10px;
 	border-radius: 10px;
 	max-width: 60%;
-	gap: 5px;
-	flex-wrap: wrap;
-	display: flex;
-	align-items: flex-end;
-	justify-content: flex-end;
-
+	gap: 2px 5px;
+	vertical-align: baseline;
 	@media (max-width: 768px) {
 		max-width: 65%;
 	}
 `;
 
-const Text = styled.p`
+const Text = styled.span`
 	color: var(--color-white);
 	text-align: justify;
 	line-height: 1.5rem;
-	font-size: 1rem;
+	font-size: 0.9rem;
 `;
 
-const Time = styled.p`
+const Time = styled.span`
 	font-size: 0.8rem;
+	white-space: nowrap;
 	color: var(--color-gray--2);
+	float: right;
+	margin: 0.5rem 0 0 5px;
 `;
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
 const ChatBox = ({ chat, own }) => {
+	const { message, createdAt } = chat;
+
 	return (
 		<StyledChat own={own}>
 			<Img src={`${PUBLIC_URL}person/5.jpeg`} />
 			<ChatContainer>
-				<Text>{chat.text}</Text>
-				<Time>{chat.time}</Time>
+				<Text>{message}</Text>
+				<Time>{format(createdAt)}</Time>
 			</ChatContainer>
 		</StyledChat>
 	);

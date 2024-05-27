@@ -1,6 +1,10 @@
 import styled from 'styled-components';
+import { useEffect, forwardRef } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import ChatBox from './ChatBox';
+import { useAuth } from '../../../context/AuthContext';
 
 const StyledBox = styled.div`
 	height: 80%;
@@ -11,27 +15,28 @@ const StyledBox = styled.div`
 	padding: 20px 0;
 `;
 
-const message = {
-	text: `amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-	time: '2 mins ago'
-};
+const ChatTop = forwardRef(function ChatTop({ chats, setChats }, ref) {
+	const { user } = useAuth();
 
-const ChatTop = () => {
+	const { conversationId } = useParams();
+
+	useEffect(() => {
+		const getChats = async () => {
+			const res = await axios.get(`/api/messages/${conversationId}`);
+
+			setChats(res.data.data);
+		};
+
+		getChats();
+	}, [conversationId, setChats]);
+
 	return (
-		<StyledBox>
-			<ChatBox chat={message} />
-
-			<ChatBox own={true} chat={message} />
-
-			<ChatBox chat={message} />
-
-			<ChatBox own={true} chat={message} />
-
-			<ChatBox chat={message} />
-
-			<ChatBox chat={message} />
+		<StyledBox ref={ref}>
+			{chats.map((chat) => (
+				<ChatBox key={chat._id} own={chat.senderId === user._id} chat={chat} />
+			))}
 		</StyledBox>
 	);
-};
+});
 
 export default ChatTop;
