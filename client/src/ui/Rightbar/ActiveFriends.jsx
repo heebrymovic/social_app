@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import ActiveFriend from '../ActiveFriend';
-import { Users as UsersData } from '../../data';
+import OnlineFriends from '../OnlineFriends';
 
 const Wrapper = styled.div`
 	display: flex;
@@ -14,9 +13,7 @@ const ActiveFriends = () => {
 		<Wrapper>
 			<h4>Online Friends</h4>
 
-			{UsersData.map((user) => (
-				<ActiveFriend user={user} key={user.id} />
-			))}
+			<OnlineFriends />
 		</Wrapper>
 	);
 };

@@ -2,10 +2,12 @@ const express = require('express');
 
 const ConversationsRouter = express.Router();
 
-const { createConversation, getConversation } = require('../controllers/ConversationController');
+const { createConversation, getConversations, getConversation } = require('../controllers/ConversationController');
 
 ConversationsRouter.post('/create', createConversation);
 
-ConversationsRouter.get('/:userId', getConversation);
+ConversationsRouter.get('/getConversation/:conversationId', getConversation);
+
+ConversationsRouter.get('/:userId', getConversations);
 
 module.exports = ConversationsRouter;

@@ -37,7 +37,7 @@ const ActiveFriend = ({ user, to }) => {
 	return (
 		<UserWrapper to={to}>
 			<ActiveWrapper>
-				<Img src={`${PUBLIC_URL}${profilePicture}`} />
+				<Img src={`${PUBLIC_URL}${profilePicture || '/person/noAvatar.png'}`} />
 				<Active />
 			</ActiveWrapper>
 			<h4>{username}</h4>

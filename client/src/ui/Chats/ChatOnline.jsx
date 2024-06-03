@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import ActiveFriend from '../ActiveFriend';
+
+import OnlineFriends from '../OnlineFriends';
 
 const StyledFriends = styled.div`
 	flex: 1.5;
@@ -13,20 +14,10 @@ const StyledFriends = styled.div`
 	}
 `;
 
-const user = {
-	id: 5,
-	profilePicture: 'person/5.jpeg',
-	username: 'Thomas Holden'
-};
-
 const ChatOnline = () => {
 	return (
 		<StyledFriends>
-			<ActiveFriend user={user} />
-			<ActiveFriend user={user} />
-			<ActiveFriend user={user} />
-			<ActiveFriend user={user} />
-			<ActiveFriend user={user} />
+			<OnlineFriends to="chats" />
 		</StyledFriends>
 	);
 };

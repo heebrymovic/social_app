@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 import UserChatList from './UserChatList';
 import { useAuth } from '../../../context/AuthContext';
+import { useConversations } from '../useConversations';
 
 const Wrapper = styled.div`
 	padding: 25px 15px;
@@ -44,21 +45,11 @@ const user = {
 };
 
 const ChatsMenu = () => {
-	const [conversations, setConversations] = useState([]);
-
 	const [chats, setChats] = useState([]);
 
 	const { user } = useAuth();
 
-	useEffect(() => {
-		const getConversations = async () => {
-			const res = await axios.get(`/api/conversations/${user._id}`);
-
-			setConversations(res.data.conversations);
-		};
-
-		getConversations();
-	}, [user]);
+	const [conversations] = useConversations(user);
 
 	return (
 		<Wrapper>

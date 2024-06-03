@@ -49,7 +49,7 @@ exports.createConversation = async (req, res) => {
 	}
 };
 
-exports.getConversation = async (req, res) => {
+exports.getConversations = async (req, res) => {
 	const userId = req.params.userId;
 
 	try {
@@ -63,12 +63,37 @@ exports.getConversation = async (req, res) => {
 		}
 
 		res.status(200).json({
-			message: 'Conversation successfully queried',
+			message: 'Conversations successfully queried',
 			conversations
 		});
 	} catch (err) {
 		res.status(401).json({
 			message: 'Cannot get conversations',
+			error: err.message
+		});
+	}
+};
+
+exports.getConversation = async (req, res) => {
+	const conversationId = req.params.conversationId;
+
+	if (!conversationId) {
+		return res.status(400).json({
+			message: 'Cannot get conversation',
+			error: 'conversationId is required'
+		});
+	}
+
+	try {
+		const conversation = await Conversation.findById(conversationId);
+
+		res.status(200).json({
+			message: 'Conversation successfully queried',
+			conversation
+		});
+	} catch (err) {
+		res.status(401).json({
+			message: 'Cannot get conversation',
 			error: err.message
 		});
 	}

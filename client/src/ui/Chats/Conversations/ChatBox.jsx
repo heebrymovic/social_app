@@ -1,6 +1,9 @@
 import styled, { css } from 'styled-components';
 import { format } from 'timeago.js';
 
+import { useAuth } from '../../../context/AuthContext';
+import { useGetUser } from '../../../hooks/useGetUser';
+
 const StyledChat = styled.div.withConfig({
 	shouldForwardProp: (prop, defaultValidatorFn) => !['own'].includes(prop)
 })`
@@ -38,9 +41,28 @@ const ChatContainer = styled.div`
 
 const Text = styled.span`
 	color: var(--color-white);
+
 	text-align: justify;
 	line-height: 1.5rem;
 	font-size: 0.9rem;
+`;
+
+const Itext = styled(Text)`
+	overflow: hidden;
+	font-size: 0.75rem;
+	font-style: italic;
+	display: inline-block;
+	white-space: nowrap;
+	animation: typing 1.5s infinite;
+
+	@keyframes typing {
+		from {
+			width: 0;
+		}
+		to {
+			width: 100%;
+		}
+	}
 `;
 
 const Time = styled.span`
@@ -53,15 +75,18 @@ const Time = styled.span`
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
-const ChatBox = ({ chat, own }) => {
-	const { message, createdAt } = chat;
+const ChatBox = ({ chat, own, typing }) => {
+	const { message, createdAt, senderId } = chat;
+
+	const [user] = useGetUser(senderId);
 
 	return (
 		<StyledChat own={own}>
-			<Img src={`${PUBLIC_URL}person/5.jpeg`} />
+			<Img src={`${PUBLIC_URL}${user.profilePicture || '/person/noAvatar.png'}`} />
 			<ChatContainer>
-				<Text>{message}</Text>
-				<Time>{format(createdAt)}</Time>
+				{!typing && <Text>{message}</Text>}
+				{typing && <Itext>{message}</Itext>}
+				{createdAt && <Time>{format(createdAt)}</Time>}
 			</ChatContainer>
 		</StyledChat>
 	);

@@ -30,10 +30,17 @@ const Button = styled.button`
 	border-radius: 5px;
 `;
 
-const ChatBottom = ({ onSubmit, messageRef, formRef }) => {
+const ChatBottom = ({ onSubmit, messageRef, formRef, setMessageAreaFocus, onKeyDown, onKeyUp }) => {
 	return (
 		<StyledBox onSubmit={onSubmit}>
-			<TextArea ref={messageRef} placeholder="Enter a message"></TextArea>
+			<TextArea
+				ref={messageRef}
+				onKeyDown={onKeyDown}
+				onKeyUp={onKeyUp}
+				onFocus={(e) => setMessageAreaFocus(true)}
+				onBlur={(e) => setMessageAreaFocus(false)}
+				placeholder="Enter a message"
+			></TextArea>
 			<Button ref={formRef}>Send</Button>
 		</StyledBox>
 	);

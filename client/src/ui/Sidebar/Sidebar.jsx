@@ -34,16 +34,19 @@ const StyledButton = styled.button`
 const Sidebar = () => {
 	const navigate = useNavigate();
 
-	const { dispatchAuth } = useAuth();
+	const { dispatchAuth, socket, user } = useAuth();
 
 	const logout = async () => {
 		await axios.post('/api/auth/logout');
 
 		toast.success('You have successfully logged out.');
 
-		localStorage.removeItem("authenticate")
+		localStorage.removeItem('authenticate');
+
+		socket.current.emit('logout', user._id);
 
 		dispatchAuth({ type: 'LOGOUT' });
+
 		navigate('/login', { replace: true });
 	};
 

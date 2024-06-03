@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import ChatTop from './ChatTop';
 import ChatBottom from './ChatBottom';
 import { useAuth } from '../../../context/AuthContext';
+import { useEvent } from './useEvent';
 
 const ConversationWrapper = styled.div`
 	padding: 0 10px;
@@ -31,41 +32,52 @@ const Conversations = () => {
 
 	const [chats, setChats] = useState([]);
 
-	const { user } = useAuth();
+	const [receiverId, setReceiverId] = useState(null);
 
-	const messageRef = useRef();
+	const [conversationMessage, setConversationMessage] = useState(null);
+
+	const { user, socket } = useAuth();
+
+	const { setMessageAreaFocus, messageRef, formRef } = useEvent();
+
+	const [typingId, setTypingId] = useState();
 
 	const topChatRef = useRef();
 
-	const formRef = useRef();
-
 	useEffect(() => {
 		if (topChatRef.current) topChatRef.current.scrollTop = topChatRef.current.scrollHeight;
-	}, [chats]);
+	}, [chats, typingId]);
 
 	useEffect(() => {
-		let keysPressed = {};
-
-		const ev = (e) => {
-			keysPressed[e.key] = true;
-
-			console.log(keysPressed);
-
-			if (!keysPressed['Shift'] && e.key === 'Enter') {
-				messageRef.current.value && formRef.current.click();
-			}
-		};
-
-		document.addEventListener('keyup', (e) => {
-			delete keysPressed[e.key];
+		socket.current?.on('getMessage', (message) => {
+			console.log(message);
+			setConversationMessage({ ...message, _id: Date.now() });
 		});
 
-		document.addEventListener('keydown', ev);
+		socket.current?.on('typingUser', (typingUserId) => {
+			setTypingId(typingUserId);
+		});
 
-		return () => {
-			document.removeEventListener('keydown', ev);
+		socket.current?.on('endTyping', (typingUserId) => {
+			typingUserId === user._id && setTypingId('');
+		});
+	}, [setConversationMessage, socket]);
+
+	useEffect(() => {
+		conversationMessage &&
+			conversationMessage.receiverId === user._id &&
+			setChats((oldchats) => [...oldchats, conversationMessage]);
+	}, [conversationMessage, user]);
+
+	useEffect(() => {
+		const getActiveFriendConversation = async () => {
+			const res = await axios.get(`/api/conversations/getConversation/${conversationId}`);
+
+			setReceiverId(res.data.conversation.members.find((memberId) => memberId !== user._id));
 		};
-	}, []);
+
+		conversationId && getActiveFriendConversation();
+	}, [conversationId, user]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -81,6 +93,8 @@ const Conversations = () => {
 				senderId: user._id
 			};
 
+			socket.current.emit('sendMessage', { message, senderId: user._id, receiverId, createAt: new Date() });
+
 			const res = await axios.post(`/api/messages/create`, newMessage);
 
 			setChats((oldchats) => [...oldchats, res.data.data]);
@@ -91,14 +105,35 @@ const Conversations = () => {
 		}
 	};
 
+	const handleKeyDown = (e) => {
+		socket.current.emit('typing', { receiverId, senderId: user._id });
+	};
+
+	let timer;
+
+	const handleKeyUp = (e) => {
+		clearTimeout(timer);
+
+		timer = setTimeout(() => {
+			socket.current.emit('stopTyping', receiverId);
+		}, 500);
+	};
+
 	return (
 		<ConversationWrapper>
 			{!conversationId ? (
 				<StyledMessage>No Conversations yet</StyledMessage>
 			) : (
 				<>
-					<ChatTop ref={topChatRef} chats={chats} setChats={setChats} />
-					<ChatBottom formRef={formRef} messageRef={messageRef} onSubmit={handleSubmit} />
+					<ChatTop ref={topChatRef} chats={chats} typing={typingId} setChats={setChats} />
+					<ChatBottom
+						setMessageAreaFocus={setMessageAreaFocus}
+						onKeyDown={handleKeyDown}
+						onKeyUp={handleKeyUp}
+						formRef={formRef}
+						messageRef={messageRef}
+						onSubmit={handleSubmit}
+					/>
 				</>
 			)}
 		</ConversationWrapper>

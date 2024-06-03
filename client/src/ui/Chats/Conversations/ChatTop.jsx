@@ -15,7 +15,7 @@ const StyledBox = styled.div`
 	padding: 20px 0;
 `;
 
-const ChatTop = forwardRef(function ChatTop({ chats, setChats }, ref) {
+const ChatTop = forwardRef(function ChatTop({ chats, setChats, typing }, ref) {
 	const { user } = useAuth();
 
 	const { conversationId } = useParams();
@@ -35,6 +35,13 @@ const ChatTop = forwardRef(function ChatTop({ chats, setChats }, ref) {
 			{chats.map((chat) => (
 				<ChatBox key={chat._id} own={chat.senderId === user._id} chat={chat} />
 			))}
+			{typing && (
+				<ChatBox
+					own={typing === user._id}
+					chat={{ message: 'Is typing......', senderId: typing }}
+					typing={true}
+				/>
+			)}
 		</StyledBox>
 	);
 });
